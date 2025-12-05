@@ -1,16 +1,13 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from flask import Flask, request, jsonify
 from email.message import EmailMessage
-import json
-import random
-import smtplib
-import ssl
-import time
-import os
+import smtplib, ssl, random, time, os
 
 SENDER = os.getenv("GMAIL_SENDER")
 APP_PASSWORD = os.getenv("GMAIL_PASS")
 
 cooldowns = {}
+
+app = Flask(__name__)
 
 def generate_otp():
     return str(random.randint(100000, 999999))
@@ -35,7 +32,6 @@ Do NOT share this code with anyone.
 Thanks for supporting WajaBanzi™
 © 2025 All Rights Reserved.
 """
-
     msg.set_content(body)
 
     context = ssl.create_default_context()
@@ -43,66 +39,33 @@ Thanks for supporting WajaBanzi™
         server.login(SENDER, APP_PASSWORD)
         server.send_message(msg)
 
+@app.route("/")
+def health_check():
+    return jsonify({"status": "alive"})
 
-class Handler(BaseHTTPRequestHandler):
+@app.route("/send_otp", methods=["POST"])
+def send_otp():
+    data = request.json
+    email = data.get("email")
+    if not email:
+        return jsonify({"error": "email missing"}), 400
 
-    def _set_headers(self, code=200):
-        self.send_response(code)
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
+    now = time.time()
+    if email in cooldowns and now < cooldowns[email]:
+        wait = int(cooldowns[email] - now)
+        return jsonify({"success": False, "cooldown": wait})
 
-    def do_POST(self):
-        if self.path != "/send_otp":
-            self._set_headers(404)
-            self.wfile.write(b'{"error":"not found"}')
-            return
+    otp = generate_otp()
+    try:
+        send_email(email, otp)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-        content_len = int(self.headers.get("content-length", 0))
-        body = self.rfile.read(content_len)
-        data = json.loads(body.decode())
+    cooldowns[email] = now + 60  # 60s cooldown
 
-        email = data.get("email")
-        if not email:
-            self._set_headers(400)
-            self.wfile.write(b'{"error":"email missing"}')
-            return
-
-        now = time.time()
-
-        # cooldown check
-        if email in cooldowns and now < cooldowns[email]:
-            wait = int(cooldowns[email] - now)
-            self._set_headers(200)
-            self.wfile.write(json.dumps({
-                "success": False,
-                "cooldown": wait
-            }).encode())
-            return
-
-        otp = generate_otp()
-
-        try:
-            send_email(email, otp)
-        except Exception as e:
-            self._set_headers(500)
-            self.wfile.write(json.dumps({"error": str(e)}).encode())
-            return
-
-        cooldowns[email] = now + 60  # 60s cooldown
-
-        self._set_headers(200)
-        self.wfile.write(json.dumps({
-            "success": True,
-            "otp": otp  #Debug keep only
-        }).encode())
-
-
-def run():
-    port = int(os.getenv("PORT", 8080))
-    server = HTTPServer(("0.0.0.0", port), Handler)
-    print(f"Server running on port {port}")
-    server.serve_forever()
-
+    return jsonify({"success": True, "otp": otp})  # optional: remove otp for security
 
 if __name__ == "__main__":
-    run()
+    port = int(os.getenv("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
+
