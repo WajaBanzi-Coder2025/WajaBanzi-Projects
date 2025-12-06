@@ -59,6 +59,7 @@ def send_otp():
     try:
         send_email(email, otp)
     except Exception as e:
+        print("EMAIL ERROR:", e)
         return jsonify({"error": str(e)}), 500
 
     cooldowns[email] = now + 60  # 60s cooldown
@@ -68,4 +69,5 @@ def send_otp():
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8080))
     app.run(host="0.0.0.0", port=port)
+
 
