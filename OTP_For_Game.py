@@ -44,12 +44,12 @@ Thanks for supporting WajaBanzi™
 © 2025 All Rights Reserved.
 """
 
-    resend.send_email(
-        from_="no-reply@resend.dev",
-        to=email,
-        subject="This is WajaBanzi's Automated 2F System",
-        text=body,
-    )
+    resend.Emails.send({
+        "from": "no-reply@resend.dev",
+        "to": email,
+        "subject": "This is WajaBanzi's Automated System",
+        "text": body,
+    })
 
     cooldowns[email] = now + 60  # 60 sec cooldown
 
@@ -57,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
