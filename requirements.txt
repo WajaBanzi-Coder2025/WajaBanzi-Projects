@@ -1,5 +1,6 @@
 flask==3.0.0
-resend==0.8.0
+resend-python
 gunicorn==20.1.0
+
 
 
