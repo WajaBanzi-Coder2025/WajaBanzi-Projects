@@ -3,7 +3,7 @@ from resend import Resend
 import random, time, os
 
 app = Flask(__name__)
-resend = Resend(api_key=os.getenv("RESEND_API_KEY"))
+api_key = os.getenv("RESEND_API_KEY")
 
 cooldowns = {}
 
@@ -57,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
