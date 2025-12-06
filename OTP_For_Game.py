@@ -5,7 +5,6 @@ import random, time, os
 app = Flask(__name__)
 resend = Resend(api_key=os.getenv("RESEND_API_KEY"))
 
-print(resend.__version__)
 cooldowns = {}
 
 def generate_otp():
@@ -45,7 +44,7 @@ Thanks for supporting WajaBanzi™
 © 2025 All Rights Reserved.
 """
 
-    resend.emails.send({
+    resend.email.send({
         "from": "no-reply@resend.dev",
         "to": email,
         "subject": "This is WajaBanzi's Automated System",
@@ -58,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
