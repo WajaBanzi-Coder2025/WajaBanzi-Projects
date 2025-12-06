@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from resend import Resend
+import resend
 import random, time, os
 
 app = Flask(__name__)
@@ -57,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
