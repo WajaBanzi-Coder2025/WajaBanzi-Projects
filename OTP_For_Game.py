@@ -45,7 +45,7 @@ Thanks for supporting WajaBanzi™
 """
 
     resend.send_email(
-        from_email="no-reply@resend.dev",
+        from_="no-reply@resend.dev",
         to=email,
         subject="This is WajaBanzi's Automated 2F System",
         text=body,
@@ -57,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
