@@ -45,8 +45,8 @@ Thanks for supporting WajaBanzi™
 """
 
     resend.Emails.send({
-        "from": "no-reply@resend.dev",
-        "to": email,
+        "from": " 2F Authentication - Flow <no-reply@resend.dev>",
+        "to": [email],
         "subject": "This is WajaBanzi's Automated System",
         "text": body,
     })
@@ -57,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
