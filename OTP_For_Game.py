@@ -5,6 +5,7 @@ import random, time, os
 app = Flask(__name__)
 resend = Resend(api_key=os.getenv("RESEND_API_KEY"))
 
+print(resend.__version__)
 cooldowns = {}
 
 def generate_otp():
@@ -57,6 +58,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
