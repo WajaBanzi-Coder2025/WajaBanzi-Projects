@@ -44,7 +44,7 @@ Thanks for supporting WajaBanzi™
 © 2025 All Rights Reserved.
 """
 
-    resend.email.send({
+    resend.Emails.send({
         "from": "no-reply@resend.dev",
         "to": email,
         "subject": "This is WajaBanzi's Automated System",
@@ -57,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
