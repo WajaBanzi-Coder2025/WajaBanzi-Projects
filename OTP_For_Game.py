@@ -44,9 +44,9 @@ Thanks for supporting WajaBanzi™
 © 2025 All Rights Reserved.
 """
 
-    resend.emails.send({
+    resend.send_email({
         "from": "no-reply@resend.dev",
-        "to": [email],
+        "to": email,
         "subject": "This is WajaBanzi's Automated 2F System, not a spam email.",
         "text": body,
     })
@@ -57,6 +57,7 @@ Thanks for supporting WajaBanzi™
         "success": True,
         "otp": otp
     })
+
 
 
 
